@@ -44,29 +44,28 @@ const CameraComponent = ({ refreshItems }) => {
             const response = await fetch("/api/imageRecognition", {
                 method: "POST",
                 body: JSON.stringify({
-                    messages:
-                        [
-                            {
-                                role: "system",
-                                content: [
-                                    {
-                                        type: "text",
-                                        text: "You are a pantry item predictor that can predict an item I am holding in my hand in the image. Return only the name of the item that I am holding in the image. If it is not a pantry item, then reply 'false' as an answer.",
+                    messages: [
+                        {
+                            role: "system",
+                            content: [
+                                {
+                                    type: "text",
+                                    text: "You are a pantry item predictor that can predict an item I am holding in my hand in the image. Return only the name of the item that I am holding in the image. If it is not a pantry item, then reply 'false' as an answer.",
+                                },
+                            ],
+                        },
+                        {
+                            role: "user",
+                            content: [
+                                {
+                                    type: "image_url",
+                                    image_url: {
+                                        url: image,
                                     },
-                                ],
-                            },
-                            {
-                                role: "user",
-                                content: [
-                                    {
-                                        type: "image_url",
-                                        image_url: {
-                                            url: image,
-                                        },
-                                    },
-                                ],
-                            },
-                        ],
+                                },
+                            ],
+                        },
+                    ],
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,38 +73,43 @@ const CameraComponent = ({ refreshItems }) => {
                 }
             })
 
-            
-            const result = (await response.json()).data
-            if (result !== "false") {
-                const pantryRef = collection(db, `users/${user.uid}/pantry`);
-                const q = query(pantryRef, where("name", "==", result));
-                const querySnapshot = await getDocs(q);
+            const result = await response.json();
 
-                if (querySnapshot.empty) {
-                    await addDoc(pantryRef, {
-                        name: result,
-                        quantity: 1
-                    });
-                    alert.success(`${result} added to your pantry list`);
+            if (response.ok) {
+                const itemName = result.data;
+                if (itemName !== "false") {
+                    const pantryRef = collection(db, `users/${user.uid}/pantry`);
+                    const q = query(pantryRef, where("name", "==", itemName));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        await addDoc(pantryRef, {
+                            name: itemName,
+                            quantity: 1
+                        });
+                        alert.success(`${itemName} added to your pantry list`);
+                    } else {
+                        const docRef = querySnapshot.docs[0].ref;
+                        await updateDoc(docRef, {
+                            quantity: querySnapshot.docs[0].data().quantity + 1
+                        });
+                        alert.success(`${itemName} quantity updated in your pantry list`);
+                    }
+                    refreshItems();
                 } else {
-                    const docRef = querySnapshot.docs[0].ref;
-                    await updateDoc(docRef, {
-                        quantity: querySnapshot.docs[0].data().quantity + 1
-                    });
-                    alert.success(`${result} quantity updated in your pantry list`);
+                    alert.error(`This item can't be added to your pantry list`);
                 }
-                refreshItems();
             } else {
-                alert.error(`This item can't be added to your pantry list`)
+                throw new Error(result.error);
             }
         } catch (error) {
-            console.error(error)
-            alert.error(error)
+            console.error(error);
+            alert.error(error.message);
         } finally {
             setOpenModal(false);
             setLoading(false);
             setImage(null);
-            setApiKey("")
+            setApiKey("");
         }
     };
 

@@ -52,7 +52,7 @@ export default function SwipeableEdgeDrawer(props: Props) {
     const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState<React.JSX.Element[]>([]);
     const [loading, setLoading] = useState(false);
-    const [apiKey, setApiKey] = useState("")
+    const [apiKey, setApiKey] = useState("");
     const { user } = useAuth();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -97,7 +97,7 @@ export default function SwipeableEdgeDrawer(props: Props) {
                         body: JSON.stringify({
                             items: items
                         })
-                    }).then(res => res.json())
+                    }).then(res => res.json());
 
                     setMessages(parseApiResponse(response.data));
                 } else {
@@ -144,21 +144,14 @@ export default function SwipeableEdgeDrawer(props: Props) {
                     },
                 }}
             />
-            <div style={{ display: 'flex', alignItems: 'center', padding: '0.5rem' }} className='justify-between '>
-                <div style={{ border: '2px solid gray', borderRadius: '50%', }}>
-                    <Tooltip title={user ? "Find Some Great Recipes" : "Sign In to get Recipes"}>
-                        <IconButton onClick={toggleDrawer(true)} disabled={!user}>
-                            <AutoAwesome color="primary" />
-                        </IconButton>
-                    </Tooltip>
-                </div>
+            <div style={{ position: 'absolute', top: 0, right: 0, padding: '0.5rem', display: 'flex', alignItems: 'center' }}>
                 {user ? (
                     <>
                         <Avatar
                             alt={user.displayName || "User"}
                             src={user.photoURL || ""}
                             onClick={handleMenuClick}
-                            style={{ marginLeft: '0.5rem', cursor: 'pointer' }}
+                            style={{ cursor: 'pointer' }}
                         />
                         <Menu
                             anchorEl={anchorEl}
@@ -171,6 +164,15 @@ export default function SwipeableEdgeDrawer(props: Props) {
                 ) : (
                     <Button onClick={() => { signInWithGoogle() }} variant='contained'>Sign In</Button>
                 )}
+            </div>
+            <div style={{ position: 'absolute', top: 0, left: 0, padding: '0.5rem', display: 'flex', alignItems: 'center' }}>
+                <div style={{ border: '2px solid gray', borderRadius: '50%', }}>
+                    <Tooltip title={user ? "Find Some Great Recipes" : "Sign In to get Recipes"}>
+                        <IconButton onClick={toggleDrawer(true)} disabled={!user}>
+                            <AutoAwesome color="primary" />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             </div>
             <SwipeableDrawer
                 container={container}
@@ -223,6 +225,7 @@ export default function SwipeableEdgeDrawer(props: Props) {
                             <div className='w-full'>
                                 <Skeleton />
                                 <Typography variant="h1">{loading ? <Skeleton /> : 'h1'}</Typography>
+                                <Skeleton animation="wave" />
                                 <Skeleton animation="wave" />
                                 <Skeleton animation="wave" />
                                 <Skeleton animation="wave" />

@@ -26,11 +26,11 @@ export default function App({ Component, pageProps }: AppProps) {
                         <meta property="og:url" content="https://pantry-tracker-rho.vercel.app/" />
                         <meta property="og:image" content="https://some-image.png" />
                         <meta name="twitter:image" content="meta.jpeg"/>
-                        <meta name="twitter:title" content="Pantry Management System - Simplify Your Pantry and Meal Planning" />
-                        <meta name="twitter:description" content="Discover the new Pantry Management System app with Google login, AI-powered item recognition, and AI-generated recipes based on your pantry items. Built with Next.js, Tailwind CSS, and Material UI." />
-                        <title>Pantry Management System - Simplify Your Pantry and Meal Planning</title>
-                        <meta property="og:title" content="Pantry Management System - Simplify Your Pantry and Meal Planning" />
-                        <meta property="og:description" content="Explore the Pantry Management System app. Easily add items, use AI for item recognition and recipe suggestions, and keep track of your pantry. Built with Next.js, Tailwind CSS, and Material UI." />
+                        <meta name="twitter:title" content="Inventory Management System - Simplify Your Pantry and Meal Planning" />
+                        <meta name="twitter:description" content="Discover the new Inventory Management System app with Google login, AI-powered item recognition, and AI-generated recipes based on your pantry items. Built with Next.js, Tailwind CSS, and Material UI." />
+                        <title>Inventory Management System - Simplify Your Pantry and Meal Planning</title>
+                        <meta property="og:title" content="Inventory Management System - Simplify Your Pantry and Meal Planning" />
+                        <meta property="og:description" content="Explore the Inventory Management System app. Easily add items, use AI for item recognition and recipe suggestions, and keep track of your pantry. Built with Next.js, Tailwind CSS, and Material UI." />
                     </Head>
                     <Component {...pageProps} />
                     <GoogleAnalytics gaId="G-R10EFE6EBS" />
